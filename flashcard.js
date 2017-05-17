@@ -1,43 +1,52 @@
-function BasicCard(question, answer) {
-    if (this instanceof BasicCard) {
-        this.front = question;
-        this.back = answer;
-    }
-    else {
-        return new BasicCard(question, answer);
-    }
-};
+var inquirer = require("inquirer");
+var fs = require('fs');
 
-function ClozeCard(question, answer) {
-    if (this instanceof ClozeCard) {
-        this.cloze = answer;
-        this.fullText = question;
-        this.partial = question.replace(answer, "...");
-    }
-    else {
-        return new ClozeCard(question, answer);
-    }
+function logCard(fileName, content) {
+    fs.appendFile(fileName, JSON.stringify(content) + '\n', function(err) {
+        if (err) {console.log(err);}
+    });
 }
 
-var firstPresident = BasicCard("Who was the first president of the United States?", "George Washington");
+function BasicCard(inputs) {
+    if (this instanceof BasicCard) {
+        this.type = inputs.type;
+        this.front = inputs.question;
+        this.back = inputs.answer;
+    }
+    else {return new BasicCard(inputs);}
+};
 
-// "Who was the first president of the United States?"
-console.log(firstPresident.front); 
+function ClozeCard(inputs) {
+    if (this instanceof ClozeCard) {
+        this.type = inputs.type;
+        this.cloze = inputs.answer;
+        this.fullText = inputs.question;
+        this.partial = inputs.question.replace(inputs.answer, "...");
+    }
+    else {return new ClozeCard(inputs);}
+}
 
-// "George Washington"
-console.log(firstPresident.back); 
+inquirer.prompt([
+    { type: "list",
+      name: "type",
+      choices: ["Basic", "Cloze"],
+      message: "Basic or Cloze: "}, 
+    { type: "input",
+      name: "question",
+      message: "Question: "}, 
+    { type: "input", 
+      name: "answer",
+      message: "Answer: "
+  }]).then(function(inputs) {
+            if (inputs.type === "Basic") {
+                var newBasicCard = new BasicCard(inputs);
+                console.log(JSON.stringify(newBasicCard));
+                logCard("basic.txt", newBasicCard);
+            }
+            else if (inputs.type === "Cloze") {    
+                var newClozeCard = new ClozeCard(inputs); 
+                console.log(JSON.stringify(newClozeCard));
+                logCard("cloze.txt", newClozeCard);          
+            }
+});
 
-var firstPresidentCloze = new ClozeCard(
-    "George Washington was the first president of the United States.", "George Washington");
-
-// George Washington
-console.log(firstPresidentCloze.cloze); 
-
-// ... was the first president of the United States.
-console.log(firstPresidentCloze.partial); 
-
-// George Washington was the first president of the United States.
-console.log(firstPresidentCloze.fullText); 
-
-// Should throw or log an error because "oops" doesn't appear in "This doesn't work"
-//var brokenCloze("This doesn't work", "oops"); 

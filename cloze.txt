@@ -1,0 +1,1 @@
+{"type":"Cloze","cloze":"george washington","fullText":"george washington is a dude","partial":"... is a dude"}
