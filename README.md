@@ -17,10 +17,10 @@ CONSTRUCTOR OUTPUTS:
 The constructors will return the following:
 
   Basic Card:
-    this.front = <the question>
-    this.back = <the answer>
+    this.front = [the question]
+    this.back = [the answer]
     
   Cloze Card:
-    this.cloze = <the answer>
-    this.fulltext = <the statement>
-    this.partial = <the statement with the answer replaced by ...>
+    this.cloze = [the answer]
+    this.fulltext = [the statement]
+    this.partial = [the statement with the answer replaced by ...]
