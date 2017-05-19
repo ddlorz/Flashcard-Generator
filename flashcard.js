@@ -1,52 +1,11 @@
-var inquirer = require("inquirer");
-var fs = require('fs');
+var basicCard = require('./basicCard.js')
+var clozeCard = require('./clozeCard.js')
 
-function logCard(fileName, content) {
-    fs.appendFile(fileName, JSON.stringify(content) + '\n', function(err) {
-        if (err) {console.log(err);}
-    });
-}
+var basic_card = new basicCard('Who is the best American President?', 
+                               'Dwayne Elizondo Mountain Dew Herbert Camacho');
+console.log(basic_card.front + '\n' + basic_card.back);
 
-function BasicCard(inputs) {
-    if (this instanceof BasicCard) {
-        this.type = inputs.type;
-        this.front = inputs.question;
-        this.back = inputs.answer;
-    }
-    else {return new BasicCard(inputs);}
-};
-
-function ClozeCard(inputs) {
-    if (this instanceof ClozeCard) {
-        this.type = inputs.type;
-        this.cloze = inputs.answer;
-        this.fullText = inputs.question;
-        this.partial = inputs.question.replace(inputs.answer, "...");
-    }
-    else {return new ClozeCard(inputs);}
-}
-
-inquirer.prompt([
-    { type: "list",
-      name: "type",
-      choices: ["Basic", "Cloze"],
-      message: "Basic or Cloze: "}, 
-    { type: "input",
-      name: "question",
-      message: "Question: "}, 
-    { type: "input", 
-      name: "answer",
-      message: "Answer: "
-  }]).then(function(inputs) {
-            if (inputs.type === "Basic") {
-                var newBasicCard = new BasicCard(inputs);
-                console.log(JSON.stringify(newBasicCard));
-                logCard("basic.txt", newBasicCard);
-            }
-            else if (inputs.type === "Cloze") {    
-                var newClozeCard = new ClozeCard(inputs); 
-                console.log(JSON.stringify(newClozeCard));
-                logCard("cloze.txt", newClozeCard);          
-            }
-});
+var cloze_card = new clozeCard('Dwayne Elizondo Mountain Dew Herbert Camacho is the best president.', 
+                               'Dwayne Elizondo Mountain Dew Herbert Camacho');                               
+console.log(cloze_card.partial + '\n' + cloze_card.cloze+ '\n' + cloze_card.fullText);
 
